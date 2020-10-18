@@ -1,0 +1,20 @@
+[package]
+name = "brainfuck-online"
+publish = false
+version = "1.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "..."
+repository = "..."
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2018"
+
+[dependencies]
+yew = "0.17"
+docsify-cli = "0.2"
+
+[dev-dependencies]
+
+
+[features]
+default = []
