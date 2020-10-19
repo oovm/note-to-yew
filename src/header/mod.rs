@@ -2,7 +2,7 @@ pub use crate::encode::Converter;
 use yew::prelude::*;
 
 pub fn view() -> Html {
-    let title = "Brainfuck Encoder/Decoder";
+    let title = "Markups to Yew";
     html! {
     <header>
         <h1 color="#009688">{title}</h1>
@@ -36,4 +36,3 @@ pub fn svg_clipboard() -> Html {
     </svg>
     }
 }
-
