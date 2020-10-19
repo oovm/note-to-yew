@@ -1,9 +1,11 @@
-# title
+# Title
 
-text
+plain text
 
-**bold**
+**bold** and *italic*
 
-## title 2
+## Title 2
+
+[alt](link)
 
 ![img](link)

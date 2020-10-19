@@ -1,5 +1,6 @@
 use docsify_cli::{codegen::markdown_str2ast, ToYew};
 use yew::{html, prelude::*, Component, ComponentLink, Html, ShouldRender};
+use yew::ChangeData;
 
 #[derive(Debug)]
 pub enum Markup {
@@ -11,7 +12,7 @@ pub enum Markup {
 
 pub enum Event {
     Input(String),
-    SwitchTo(usize),
+    SwitchTo(ChangeData),
     Upload,
     Clean,
     Copy,
@@ -43,13 +44,15 @@ impl Component for Converter {
             }
             Event::Copy => false,
             Event::SwitchTo(u) => {
-                self.markup = match u {
-                    0 => Markup::Markdown,
-                    1 => Markup::Notedown,
-                    2 => Markup::OrgMode,
-                    3 => Markup::RichTextFormat,
-                    _ => unreachable!(),
-                };
+                 if let ChangeData::Select(s) = u {
+                     self.markup = match s.value().as_str() {
+                         "0" => Markup::Markdown,
+                         "1" => Markup::Notedown,
+                         "2" => Markup::OrgMode,
+                         "3" => Markup::RichTextFormat,
+                         _ => unreachable!(),
+                     }
+                 };
                 true
             }
             Event::Upload => true,
@@ -72,7 +75,18 @@ impl Component for Converter {
             />
         </div>
         };
-        let out_text = if self.text.is_empty() { String::new() } else { markdown_str2ast(&self.text).to_yew() };
+        let out_text = if self.text.is_empty() {
+            String::new()
+        }
+        else {
+            let ast = match self.markup {
+                Markup::Markdown => markdown_str2ast(&self.text).to_yew(),
+                Markup::Notedown => String::from("unimplemented!"),
+                Markup::OrgMode => String::from("unimplemented!"),
+                Markup::RichTextFormat => String::from("unimplemented!"),
+            };
+            ast
+        };
         let output: Html = html! {
         <div class="form-group">
             <label class="form-label">{"Output Yew"}</label>
@@ -103,11 +117,11 @@ impl Component for Converter {
         <span>{"Copy"}</span>
         </button>
 
-        <select>
-        <option onclick=self.link.callback(|_| Event::SwitchTo(0))>{"markdown"}</option>
-        <option onclick=self.link.callback(|_| Event::SwitchTo(1))>{"notedown"}</option>
-        <option onclick=self.link.callback(|_| Event::SwitchTo(2))>{"org-mode"}</option>
-        <option onclick=self.link.callback(|_| Event::SwitchTo(3))>{"richtext"}</option>
+        <select onchange=self.link.callback(|v: ChangeData| Event::SwitchTo(v))>
+        <option value=0>{"markdown"}</option>
+        <option value=1>{"notedown"}</option>
+        <option value=2>{"org-mode"}</option>
+        <option value=3>{"richtext"}</option>
         </select>
         </div>
         };
